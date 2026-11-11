@@ -65,6 +65,98 @@
     transform: scale(1.04);
 }
 
+/* =====================================================
+   CORREÇÃO DO CARRINHO
+   Layout dos produtos e imagens
+   ===================================================== */
+
+.cart-item {
+    display: grid;
+    grid-template-columns: 76px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.cart-item-image {
+    width: 76px;
+    height: 76px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #f7e0e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    flex-shrink: 0;
+}
+
+    .cart-item-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+.cart-item-info {
+    min-width: 0;
+}
+
+    .cart-item-info h4 {
+        margin: 0 0 5px;
+        font-size: 16px;
+        line-height: 1.3;
+        overflow-wrap: anywhere;
+    }
+
+.cart-item-price {
+    margin: 0 0 8px;
+    color: #927d75;
+    font-size: 13px;
+}
+
+.cart-item-subtotal {
+    white-space: nowrap;
+    font-size: 15px;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+    .quantity-controls button {
+        width: 34px;
+        height: 34px;
+        border: none;
+        border-radius: 10px;
+        background: #f4dfe3;
+        color: #704638;
+        font-size: 20px;
+    }
+
+@media (max-width: 480px) {
+
+    .cart-item {
+        grid-template-columns: 62px minmax(0, 1fr);
+        gap: 10px;
+    }
+
+    .cart-item-image {
+        width: 62px;
+        height: 62px;
+    }
+
+    .cart-item-subtotal {
+        grid-column: 2;
+        justify-self: start;
+        margin-top: 4px;
+    }
+}
+
 
 /* ============================================================
    01. VARIÁVEIS

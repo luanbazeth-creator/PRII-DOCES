@@ -470,40 +470,43 @@ function updateProductQuantityBadges() {
 }
 
 function addToCart(product, quantity = 1, customization = {}) {
-  const cartId = createCartId(product.id, customization);
-  const existingItem = cartItemsState.find((item) => item.cartId === cartId);
-  if (existingItem) {
-    existingItem.quantity += quantity;
-  } else {
-    cartItemsState.push({
-      cartId, productId: product.id, name: product.name, category: product.category,
-      price: product.price, emoji: product.emoji, quantity, customization
-    });
-  }
-  renderCart();
-  // O carrinho NÃO abre automaticamente. O cliente continua no cardápio.
-}
 
-function changeQuantity(cartId, amount) {
-  const item = cartItemsState.find(
-    (cartItem) => cartItem.cartId === cartId
-  );
+    const cartId = createCartId(product.id, customization);
 
-  if (!item) {
-    return;
-  }
-
-  item.quantity += amount;
-
-  if (item.quantity <= 0) {
-    cartItemsState = cartItemsState.filter(
-      (cartItem) => cartItem.cartId !== cartId
+    const existingItem = cartItemsState.find(
+        (item) => item.cartId === cartId
     );
-  }
 
-  renderCart();
+    if (existingItem) {
+
+        existingItem.quantity += quantity;
+
+    } else {
+
+        cartItemsState.push({
+
+            cartId: cartId,
+            productId: product.id,
+
+            name: product.name,
+            category: product.category,
+
+            price: product.price,
+
+            // Guarda a foto e o emoji, caso existam.
+            image: product.image || "",
+            emoji: product.emoji || "🍰",
+
+            quantity: quantity,
+            customization: customization
+
+        });
+
+    }
+
+    renderCart();
+
 }
-
 
 function calculateCartTotal() {
   return cartItemsState.reduce(
@@ -567,23 +570,76 @@ function renderCart() {
 
 
 function createCartItem(item) {
-  const customizationLabel = getCustomizationLabel(item.customization);
-  return `
+
+    const customizationLabel =
+        getCustomizationLabel(item.customization);
+
+    // Verifica se o produto possui uma foto.
+    const productImage = item.image
+        ? `
+      <img
+        src="${item.image}"
+        alt="${item.name}"
+        loading="lazy"
+      >
+    `
+        : `
+      <span>${item.emoji || "🍰"}</span>
+    `;
+
+    return `
+
     <div class="cart-item">
-      <div class="cart-item-image">${item.emoji}</div>
-      <div>
-        <h4>${item.name}</h4>
-        <p>${formatCurrency(item.price)} cada</p>
-        ${customizationLabel ? `<p class="cart-customization">${customizationLabel}</p>` : ""}
-        <div class="quantity-controls" aria-label="Alterar quantidade de ${item.name}">
-          <button type="button" data-cart-action="decrease" data-cart-id="${encodeURIComponent(item.cartId)}" aria-label="Diminuir quantidade de ${item.name}">−</button>
-          <strong aria-live="polite">${item.quantity}</strong>
-          <button type="button" data-cart-action="increase" data-cart-id="${encodeURIComponent(item.cartId)}" aria-label="Aumentar quantidade de ${item.name}">+</button>
-        </div>
+
+      <div class="cart-item-image">
+        ${productImage}
       </div>
-      <strong>${formatCurrency(item.price * item.quantity)}</strong>
+
+      <div class="cart-item-info">
+
+        <h4>${item.name}</h4>
+
+        <p class="cart-item-price">
+          ${formatCurrency(item.price)} cada
+        </p>
+
+        ${customizationLabel
+            ? `<p class="cart-customization">${customizationLabel}</p>`
+            : ""
+        }
+
+        <div class="quantity-controls">
+
+          <button
+            type="button"
+            data-cart-action="decrease"
+            data-cart-id="${encodeURIComponent(item.cartId)}"
+          >
+            −
+          </button>
+
+          <strong>${item.quantity}</strong>
+
+          <button
+            type="button"
+            data-cart-action="increase"
+            data-cart-id="${encodeURIComponent(item.cartId)}"
+          >
+            +
+          </button>
+
+        </div>
+
+      </div>
+
+      <strong class="cart-item-subtotal">
+        ${formatCurrency(item.price * item.quantity)}
+      </strong>
+
     </div>
+
   `;
+
 }
 
 // Usa delegação de eventos para que os botões continuem funcionando
