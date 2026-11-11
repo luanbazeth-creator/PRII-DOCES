@@ -47,72 +47,150 @@
    ============================================================ */
 
 const products = [
-  {
-    id: 1,
-    name: "Brigadeiro Gourmet",
-    category: "Brigadeiros",
-    price: 4.50,
-    description: "Brigadeiro cremoso com chocolate de qualidade.",
-    emoji: "🍫",
-    customizable: true
-  },
-  {
-    id: 2,
-    name: "Beijinho",
-    category: "Brigadeiros",
-    price: 4.50,
-    description: "Docinho de coco delicado e cremoso.",
-    emoji: "🥥",
-    customizable: true
-  },
-  {
-    id: 3,
-    name: "Morango do Amor",
-    category: "Doces",
-    price: 12.00,
-    description: "Morango envolvido em uma deliciosa cobertura.",
-    emoji: "🍓"
-  },
-  {
-    id: 4,
-    name: "Brownie Gourmet",
-    category: "Brownies",
-    price: 10.00,
-    description: "Brownie macio, intenso e cheio de chocolate.",
-    emoji: "🍫"
-  },
-  {
-    id: 5,
-    name: "Bolo de Pote",
-    category: "Bolos",
-    price: 14.00,
-    description: "Camadas de bolo e recheio preparados na hora.",
-    emoji: "🍰"
-  },
-  {
-    id: 6,
-    name: "Mini Bolo",
-    category: "Bolos",
-    price: 28.00,
-    description: "Bolo delicado perfeito para presentear.",
-    emoji: "🎂"
-  },
-  {
-    id: 7,
-    name: "Kit Festa",
-    category: "Kits",
-    price: 49.90,
-    description: "Seleção especial de doces para sua comemoração.",
-    emoji: "🎁"
-  },
-  {
-    id: 8,
-    name: "Caixa Especial",
-    category: "Caixas de 4 a 12",
-    price: 59.90,
-    description: "Uma caixa linda com nossos doces favoritos.",
-    emoji: "💝"
-  }
+    // ============================================================
+    // SOBREMESAS
+    // Para adicionar um produto, basta copiar um bloco e alterar
+    // nome, imagem e preço.
+    // ============================================================
+
+    {
+        id: 9,
+        name: "Açaí",
+        category: "Sobremesas",
+        price: 12.00,
+        description: "Uma deliciosa sobremesa.",
+        image: "assets/sobremesas/açai.jpeg"
+    },
+
+    {
+        id: 10,
+        name: "Bombom de Morango",
+        category: "Sobremesas",
+        price: 12.00,
+        description: "Uma deliciosa sobremesa.",
+        image: "assets/sobremesas/bombo-de-morango-ferrero-rocher-ninho-com-nutela-brigadeiro.jpeg"
+    },
+
+    {
+        id: 11,
+        name: "Brownie Nuvem",
+        category: "Sobremesas",
+        price: 12.00,
+        description: "Uma deliciosa sobremesa.",
+        image: "assets/sobremesas/brownie-nuvem.jpeg"
+    },
+
+    {
+        id: 12,
+        name: "Brownie Supremo",
+        category: "Sobremesas",
+        price: 12.00,
+        description: "Uma deliciosa sobremesa.",
+        image: "assets/sobremesas/brownie-supremo-com-recheio-de-brigadeiro-ou-ninho-decorado.jpeg"
+    },
+
+    {
+        id: 13,
+        name: "Caixa de Doces",
+        category: "Sobremesas",
+        price: 12.00,
+        description: "Uma deliciosa sobremesa.",
+        image: "assets/sobremesas/caixa-de-doces.jpeg"
+    },
+
+    {
+        id: 14,
+        name: "Copo Brownie Ferrero Rocher",
+        category: "Sobremesas",
+        price: 12.00,
+        description: "Uma deliciosa sobremesa.",
+        image: "assets/sobremesas/cop-brawnie-ferreiro-rocher.jpeg"
+    },
+
+    {
+        id: 15,
+        name: "Copo Brownie Chocomelo",
+        category: "Sobremesas",
+        price: 12.00,
+        description: "Uma deliciosa sobremesa.",
+        image: "assets/sobremesas/copo-brownie-chocomelo-ferrero-rocher-ninho-com-morango.jpeg"
+    },
+
+    {
+        id: 16,
+        name: "Copo da Felicidade de Morango",
+        category: "Sobremesas",
+        price: 12.00,
+        description: "Uma deliciosa sobremesa.",
+        image: "assets/sobremesas/copo-da-felicidade-de-morango.jpeg"
+    },
+
+    {
+        id: 17,
+        name: "Fatia de Brownie",
+        category: "Sobremesas",
+        price: 12.00,
+        description: "Uma deliciosa sobremesa.",
+        image: "assets/sobremesas/fatia-brownie.jpeg"
+    },
+
+    {
+        id: 18,
+        name: "Fatia de Brownie Especial",
+        category: "Sobremesas",
+        price: 12.00,
+        description: "Uma deliciosa sobremesa.",
+        image: "assets/sobremesas/fatia-brownie2.jpeg"
+    },
+
+    {
+        id: 19,
+        name: "Pote de Sorvete",
+        category: "Sobremesas",
+        price: 12.00,
+        description: "Uma deliciosa sobremesa.",
+        image: "assets/sobremesas/pote-de-sorvete.jpeg"
+    },
+
+    {
+        id: 20,
+        name: "Sanduíche de Brownie",
+        category: "Sobremesas",
+        price: 12.00,
+        description: "Uma deliciosa sobremesa.",
+        image: "assets/sobremesas/sanduiche-brownie.jpeg"
+    },
+
+    {
+        id: 21,
+        name: "Sobremesa de Brigadeiro com Morango",
+        category: "Sobremesas",
+        price: 12.00,
+        description: "Uma deliciosa sobremesa.",
+        image: "assets/sobremesas/sobremesa-de-brigadeiro-com-morango-e-creme-de-ninho.jpeg"
+    },
+
+    // Fotos que vieram com nome automático do WhatsApp.
+    // Elas aparecem sem título no cardápio.
+    {
+        id: 22,
+        name: "Sobremesa",
+        showName: false,
+        category: "Sobremesas",
+        price: 12.00,
+        description: "",
+        image: "assets/sobremesas/WhatsApp Image 2026-10-25 at 15.10.30.jpeg"
+    },
+
+    {
+        id: 23,
+        name: "Sobremesa",
+        showName: false,
+        category: "Sobremesas",
+        price: 12.00,
+        description: "",
+        image: "assets/sobremesas/WhatsApp Image 2026-10-25 at 15.10.33 (1).jpeg"
+    }
 ];
 
 
@@ -227,15 +305,37 @@ function renderProducts() {
 
 
 function createProductCard(product) {
-  const customizationLabel = product.customizable
-    ? `<small class="customizable-label">♡ Monte do seu jeito</small>`
-    : "";
 
-  return `
+    const customizationLabel = product.customizable
+        ? `<small class="customizable-label">♡ Monte do seu jeito</small>`
+        : "";
+
+    // Se o produto tiver foto, mostra a imagem.
+    // Se não tiver, mantém o emoji antigo.
+    const productVisual = product.image
+        ? `
+      <img
+        src="${product.image}"
+        alt="${product.showName === false ? "Sobremesa da PRII DOCES" : product.name}"
+        loading="lazy"
+      >
+    `
+        : product.emoji;
+
+    // Alguns produtos podem aparecer sem título.
+    const productName = product.showName === false
+        ? ""
+        : `<h3>${product.name}</h3>`;
+
+    const productDescription = product.description
+        ? `<p>${product.description}</p>`
+        : "";
+
+    return `
     <article class="product-card" data-product-id="${product.id}">
 
       <div class="product-image">
-        ${product.emoji}
+        ${productVisual}
       </div>
 
       <div class="product-info">
@@ -244,13 +344,9 @@ function createProductCard(product) {
           ${product.category}
         </span>
 
-        <h3>
-          ${product.name}
-        </h3>
+        ${productName}
 
-        <p>
-          ${product.description}
-        </p>
+        ${productDescription}
 
         ${customizationLabel}
 
@@ -260,17 +356,23 @@ function createProductCard(product) {
             ${formatCurrency(product.price)}
           </span>
 
-          <!-- Mostra a quantidade desse produto que já está no carrinho. -->
           <div class="product-add-controls">
-            <span class="product-cart-quantity" data-quantity-for="${product.id}" aria-label="Quantidade no carrinho">${getProductQuantity(product.id)}</span>
+
+            <span
+              class="product-cart-quantity"
+              data-quantity-for="${product.id}"
+            >
+              ${getProductQuantity(product.id)}
+            </span>
+
             <button
               class="add-product"
               type="button"
               onclick="handleProductSelection(${product.id})"
-              aria-label="Adicionar ${product.name} ao carrinho"
             >
               +
             </button>
+
           </div>
 
         </div>
