@@ -1089,24 +1089,3 @@ function updateChangePreviewV5(){
  if(amount<total){elements.changePreview.textContent=`Valor insuficiente. Faltam ${formatCurrency(total-amount)}.`;elements.changePreview.className="change-preview invalid";return}
  elements.changePreview.textContent=`Troco: ${formatCurrency(amount-total)}`;elements.changePreview.className="change-preview valid";
 }
-function initV5(){
- renderCarousel();setupCarousel();updatePaymentFieldsV5();updateCarousel();startCarousel();
- elements.payment.addEventListener("change",updatePaymentFieldsV5);
- elements.changeFor.addEventListener("input",updateChangePreviewV5);
- updateCheckoutSummary();
- document.querySelectorAll(".product-card").forEach(c=>{if(c.dataset.productId)return});
-}
-if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",initV5);else initV5();
-
-const _priiObserver=new MutationObserver(()=>{
- const cards=document.querySelectorAll(".product-card");
- cards.forEach(card=>{
-   if(card.dataset.productId)return;
-   const buttons=card.querySelectorAll("button");
-   const add=buttons[buttons.length-1];
-   const txt=card.textContent||"";
-   const p=products.find(x=>txt.includes(x.name));
-   if(p)card.dataset.productId=p.id;
- });
-});
-_priiObserver.observe(document.body,{childList:true,subtree:true});

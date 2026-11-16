@@ -617,8 +617,8 @@ h3 {
 .hero-card h1 {
   margin: 9px 0 13px;
 
-  font-size: clamp(35px, 5vw, 58px);
-  line-height: 1.03;
+  font-size: clamp(25px, 3.5vw, 40px);
+  line-height: 1.15;
 }
 
 .hero-card h1 em {
@@ -1373,7 +1373,7 @@ h3 {
   }
 
   .hero-card h1 {
-    font-size: 40px;
+    font-size: 29px;
   }
 
   .hero-seal {
