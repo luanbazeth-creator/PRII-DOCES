@@ -30,7 +30,7 @@ body {
   isolation: isolate;
   min-height: 100vh;
   margin: 0;
-  padding: 22px 16px 28px;
+  padding: 14px 12px 24px;
   color: var(--brown-text);
   background:
     radial-gradient(ellipse at 50% 0%, rgba(255, 248, 250, 0.95) 0%, transparent 56%),
@@ -38,20 +38,6 @@ body {
   font-family: "DM Sans", Arial, sans-serif;
 }
 
-
-/* Foto da Priscila como fundo suave: não bloqueia cliques nos atalhos. */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image: url("../assets/perfil.jpg");
-  background-repeat: no-repeat;
-  background-position: center 8%;
-  background-size: min(100vw, 560px) auto;
-  opacity: 0.17;
-}
 
 /* Mantém todo o conteúdo acima da foto de fundo. */
 .link-page {
@@ -62,14 +48,14 @@ body::before {
 a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; }
 
-/* 02. Cabeçalho: logo da marca no alto e texto centralizado. */
-.link-page { width: min(100%, 540px); margin: 0 auto; }
+/* 02. Foto no alto, botões originais e logotipo abaixo dos botões. */
+.link-page { width: min(100%, 430px); margin: 0 auto; }
 .store-header {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 0 8px 8px;
+  padding: 0 4px 8px;
 }
 .brand-logo {
   width: clamp(150px, 44vw, 218px);
@@ -80,13 +66,47 @@ img { display: block; max-width: 100%; }
   filter: drop-shadow(0 5px 10px rgba(112, 54, 73, 0.08));
 }
 
-/* 03. Cinco atalhos grandes, distribuídos em grade para facilitar o toque. */
+
+/* Foto alinhada ao topo, com aparência mais leve e suave no celular. */
+.profile-cover {
+  position: relative;
+  width: 100%;
+  height: clamp(212px, 58vw, 300px);
+  margin: 0 0 10px;
+  overflow: hidden;
+  border-radius: 23px;
+  border: 1px solid rgba(231, 189, 203, 0.58);
+  box-shadow: 0 8px 22px rgba(112, 54, 73, 0.10);
+  background: linear-gradient(180deg, rgba(255,255,255,0.26), rgba(248,229,235,0.18));
+}
+.profile-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.30), rgba(248,229,235,0.36));
+  pointer-events: none;
+}
+.profile-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  opacity: 0.68;
+  transform: scale(1.01);
+}
+/* Logotipo centralizado logo depois dos seis botões. */
+.header-logo {
+  width: clamp(138px, 38vw, 177px);
+  margin: 0 auto 12px;
+}
+
+/* 03. Os seis atalhos originais, sem alterar aparência, ícones ou links. */
 .icon-links {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px 10px;
   width: 100%;
-  margin: 0 0 24px;
+  margin: 0 0 13px;
 }
 .icon-link {
   min-width: 0;
@@ -150,7 +170,7 @@ img { display: block; max-width: 100%; }
   overflow-wrap: anywhere;
 }
 
-/* 04. A foto da Priscila agora aparece suavemente no fundo da página. */
+/* 04. Frase original abaixo dos botões. */
 .store-description {
   max-width: 360px;
   margin: 0 auto;
@@ -170,24 +190,22 @@ img { display: block; max-width: 100%; }
 }
 .page-footer p { margin: 0; }
 
-    .page-footer .brand-logo {
-        width: 145px;
-        height: auto;
-        aspect-ratio: auto;
-        margin: 0 auto 10px;
-        object-fit: contain;
-    }
-
 @media (min-width: 480px) {
-  .icon-links { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 9px; }
-  .icon-link { min-height: 122px; padding-inline: 5px; border-radius: 20px; }
-  .icon-art { width: 54px; height: 54px; flex-basis: 54px; }
+  .icon-links { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 10px; }
+  .icon-link { min-height: 122px; padding-inline: 6px; border-radius: 20px; }
+  .icon-art { width: 56px; height: 56px; flex-basis: 56px; }
   .icon-label { font-size: 12px; }
 }
 
+@media (min-width: 860px) {
+  .link-page { width: min(100%, 520px); }
+  .icon-links { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+}
+
 @media (max-width: 360px) {
-  body { padding: 16px 11px 22px; }
-  .brand-logo { width: 150px; }
+  body { padding: 12px 10px 20px; }
+  .header-logo { width: 137px; margin-bottom: 12px; }
+  .profile-cover { height: 215px; border-radius: 18px; }
   .icon-links { gap: 9px 7px; }
   .icon-link { min-height: 108px; padding: 9px 4px; border-radius: 18px; }
   .icon-art { width: 52px; height: 52px; flex-basis: 52px; }
