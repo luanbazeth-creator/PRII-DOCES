@@ -148,7 +148,7 @@ No modal de personalização, os botões `−` e `+` permitem escolher a quantid
 
 
 ## Página de Estações (adicionada)
-- `estacoes.html`: página exclusiva com Açaí, Fondue, Experiência Fondue e Estação Donuts.
+- `estacoes.html`: página exclusiva com Açaí, Fondue, Donuts, Fini e Guloseimas.
 - `css/estacoes.css`: estilos próprios da página de estações.
 - `assets/estacao-donuts.jpeg`: foto de donuts fornecida para esta atualização.
 - Cada cartão tem um botão que abre o WhatsApp oficial da PRII DOCES com uma mensagem pronta.

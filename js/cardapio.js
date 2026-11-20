@@ -59,7 +59,7 @@ const products = [
         category: "Sobremesas",
         price: 12.00,
         description: "Uma deliciosa sobremesa.",
-        image: "assets/sobremesas/açai.jpeg"
+        image: "assets/sobremesas/acai.jpeg"
     },
 
     {
@@ -356,22 +356,31 @@ function createProductCard(product) {
             ${formatCurrency(product.price)}
           </span>
 
-          <div class="product-add-controls">
+          <div class="product-add-controls" aria-label="Quantidade de ${product.name} no carrinho">
+
+            <button
+              class="decrease-product"
+              type="button"
+              data-product-action="decrease"
+              data-product-id="${product.id}"
+              data-decrease-for="${product.id}"
+              aria-label="Remover uma unidade de ${product.name}"
+              ${getProductQuantity(product.id) === 0 ? "disabled" : ""}
+            >−</button>
 
             <span
               class="product-cart-quantity"
               data-quantity-for="${product.id}"
-            >
-              ${getProductQuantity(product.id)}
-            </span>
+              aria-live="polite"
+            >${getProductQuantity(product.id)}</span>
 
             <button
               class="add-product"
               type="button"
-              onclick="handleProductSelection(${product.id})"
-            >
-              +
-            </button>
+              data-product-action="increase"
+              data-product-id="${product.id}"
+              aria-label="Adicionar uma unidade de ${product.name}"
+            >+</button>
 
           </div>
 
@@ -460,14 +469,38 @@ function getProductQuantity(productId) {
     .reduce((total, item) => total + item.quantity, 0);
 }
 
-// Atualiza os números ao lado do botão + em todos os cards visíveis.
+// Sincroniza quantidade e botão − do cardápio com o carrinho.
 function updateProductQuantityBadges() {
   document.querySelectorAll("[data-quantity-for]").forEach((badge) => {
-    const productId = Number(badge.dataset.quantityFor);
-    badge.textContent = getProductQuantity(productId);
-    badge.classList.toggle("has-quantity", getProductQuantity(productId) > 0);
+    const quantity = getProductQuantity(Number(badge.dataset.quantityFor));
+    badge.textContent = quantity;
+    badge.classList.toggle("has-quantity", quantity > 0);
+  });
+
+  document.querySelectorAll("[data-decrease-for]").forEach((button) => {
+    button.disabled = getProductQuantity(Number(button.dataset.decreaseFor)) === 0;
   });
 }
+
+// Quando houver variações do mesmo produto, diminui a última adicionada.
+function decreaseProductQuantity(productId) {
+  const item = [...cartItemsState].reverse().find((entry) => entry.productId === productId);
+  if (item) changeQuantity(item.cartId, -1);
+}
+
+// Eventos delegados: botões seguem funcionando ao buscar ou trocar categoria.
+elements.products.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-product-action][data-product-id]");
+  if (!button || !elements.products.contains(button) || button.disabled) return;
+  event.preventDefault();
+
+  const productId = Number(button.dataset.productId);
+  if (button.dataset.productAction === "decrease") {
+    decreaseProductQuantity(productId);
+  } else if (button.dataset.productAction === "increase") {
+    handleProductSelection(productId);
+  }
+});
 
 function addToCart(product, quantity = 1, customization = {}) {
 
@@ -564,12 +597,12 @@ function renderCart() {
 
   elements.cartItems.innerHTML =
     cartItemsState
-      .map(createCartItem)
+      .map((item, index) => createCartItem(item, index))
       .join("");
 }
 
 
-function createCartItem(item) {
+function createCartItem(item, index) {
 
     const customizationLabel =
         getCustomizationLabel(item.customization);
@@ -613,20 +646,18 @@ function createCartItem(item) {
           <button
             type="button"
             data-cart-action="decrease"
-            data-cart-id="${encodeURIComponent(item.cartId)}"
-          >
-            −
-          </button>
+            data-cart-index="${index}"
+            aria-label="Diminuir quantidade de ${item.name}"
+          >−</button>
 
-          <strong>${item.quantity}</strong>
+          <strong class="cart-item-quantity" aria-live="polite">${item.quantity}</strong>
 
           <button
             type="button"
             data-cart-action="increase"
-            data-cart-id="${encodeURIComponent(item.cartId)}"
-          >
-            +
-          </button>
+            data-cart-index="${index}"
+            aria-label="Aumentar quantidade de ${item.name}"
+          >+</button>
 
         </div>
 
@@ -642,16 +673,33 @@ function createCartItem(item) {
 
 }
 
-// Usa delegação de eventos para que os botões continuem funcionando
-// após o carrinho ser redesenhado. Também evita problemas com aspas
-// nas opções de personalização do produto.
-elements.cartItems.addEventListener("click", (event) => {
-  const button = event.target.closest("button[data-cart-action][data-cart-id]");
-  if (!button) return;
+// Altera a quantidade de um item do carrinho. Ao chegar a zero,
+// remove o item por completo (sem permitir quantidades negativas).
+function changeQuantity(cartId, amount) {
+  const index = cartItemsState.findIndex((item) => item.cartId === cartId);
+  if (index < 0 || !Number.isInteger(amount) || amount === 0) return;
 
-  const cartId = decodeURIComponent(button.dataset.cartId);
+  const nextQuantity = cartItemsState[index].quantity + amount;
+  if (nextQuantity <= 0) {
+    cartItemsState.splice(index, 1);
+  } else {
+    cartItemsState[index].quantity = nextQuantity;
+  }
+
+  renderCart();
+}
+
+// Usa o índice atual do item, evitando nomes codificados nos atributos HTML.
+// Após cada alteração o carrinho é redesenhado e os índices são atualizados.
+elements.cartItems.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-cart-action][data-cart-index]");
+  if (!button || !elements.cartItems.contains(button)) return;
+  event.preventDefault();
+
+  const index = Number(button.dataset.cartIndex);
+  if (!Number.isInteger(index) || index < 0 || index >= cartItemsState.length) return;
   const amount = button.dataset.cartAction === "increase" ? 1 : -1;
-  changeQuantity(cartId, amount);
+  changeQuantity(cartItemsState[index].cartId, amount);
 });
 
 
@@ -672,10 +720,12 @@ function closeCart() {
 
 
 function openCheckoutModal() {
-  if (!cartItemsState.length) {
-    return;
-  }
+  if (!cartItemsState.length) return;
 
+  // Nenhum recebimento vem marcado, nem mesmo após fechar e abrir novamente.
+  document.getElementById("deliveryMethod").value = "";
+  clearDeliveryMethodError();
+  updateCheckoutSummary();
   elements.checkoutModal.classList.add("show");
 }
 
@@ -736,12 +786,17 @@ function sendOrderToWhatsApp() {
   const deliveryMethod = document.getElementById("deliveryMethod").value;
   const isDelivery = deliveryMethod === "Entrega com frete";
 
-  // Para entrega, o endereço é obrigatório. Na retirada, ele é opcional.
+  if (!cartItemsState.length) return;
   if (!name) {
     alert("Preencha seu nome para continuar.");
+    document.getElementById("customerName").focus();
     return;
   }
 
+  // Sem seleção explícita, não é possível encaminhar o pedido.
+  if (!validateDeliveryMethod()) return;
+
+  // Para entrega, o endereço é obrigatório. Na retirada, ele é opcional.
   if (isDelivery && !address) {
     alert("Informe o endereço para a entrega.");
     return;
@@ -908,6 +963,10 @@ document
   });
 
 
+// A opção Dinheiro deve abrir o campo de troco.
+elements.payment.addEventListener("change", updatePaymentFieldsV5);
+elements.changeFor.addEventListener("input", updateChangePreviewV5);
+
 elements.checkoutButton.addEventListener(
   "click",
   openCheckoutModal
@@ -927,8 +986,24 @@ document
 const deliveryMethodSelect = document.getElementById("deliveryMethod");
 const deliveryMethodNote = document.getElementById("deliveryMethodNote");
 
+function clearDeliveryMethodError() {
+  deliveryMethodSelect.setAttribute("aria-invalid", "false");
+  document.getElementById("deliveryMethodError").hidden = true;
+}
+
+function validateDeliveryMethod() {
+  const valid = ["Entrega com frete", "Retirada no local"].includes(deliveryMethodSelect.value);
+  deliveryMethodSelect.setAttribute("aria-invalid", String(!valid));
+  document.getElementById("deliveryMethodError").hidden = valid;
+  if (!valid) deliveryMethodSelect.focus();
+  return valid;
+}
+
 if (deliveryMethodSelect) {
-  deliveryMethodSelect.addEventListener("change", updateCheckoutSummary);
+  deliveryMethodSelect.addEventListener("change", () => {
+    clearDeliveryMethodError();
+    updateCheckoutSummary();
+  });
 }
 
 
@@ -1046,6 +1121,7 @@ t.addEventListener("keydown",e=>{const c=e.target.closest(".carousel-card");if(!
 // O subtotal contém apenas os produtos; o frete entra no total final.
 function calculateCheckoutTotal() {
   const deliveryMethod = document.getElementById("deliveryMethod")?.value;
+  if (!["Entrega com frete", "Retirada no local"].includes(deliveryMethod)) return null;
   const fee = deliveryMethod === "Entrega com frete" ? DELIVERY_FEE : 0;
   return calculateCartTotal() + fee;
 }
@@ -1053,6 +1129,7 @@ function calculateCheckoutTotal() {
 function updateCheckoutSummary() {
   const deliveryMethod = document.getElementById("deliveryMethod")?.value;
   const isDelivery = deliveryMethod === "Entrega com frete";
+  const hasSelection = ["Entrega com frete", "Retirada no local"].includes(deliveryMethod);
   const subtotal = calculateCartTotal();
   const fee = isDelivery ? DELIVERY_FEE : 0;
   const total = subtotal + fee;
@@ -1063,13 +1140,15 @@ function updateCheckoutSummary() {
   const note = document.getElementById("deliveryMethodNote");
 
   if (subtotalElement) subtotalElement.textContent = formatCurrency(subtotal);
-  if (feeElement) feeElement.textContent = formatCurrency(fee);
-  if (totalElement) totalElement.textContent = formatCurrency(total);
+  if (feeElement) feeElement.textContent = hasSelection ? formatCurrency(fee) : "—";
+  if (totalElement) totalElement.textContent = hasSelection ? formatCurrency(total) : "—";
 
   if (note) {
-    note.textContent = isDelivery
-      ? `Taxa fixa de entrega: ${formatCurrency(DELIVERY_FEE)}. O valor já está incluído no total abaixo.`
-      : "Retirada no local sem taxa de entrega. O total abaixo inclui somente os produtos.";
+    note.textContent = !hasSelection
+      ? "Escolha entrega ou retirada. A taxa de entrega é R$ 3,00; a retirada não tem taxa."
+      : isDelivery
+        ? `Taxa fixa de entrega: ${formatCurrency(DELIVERY_FEE)}. O valor já está incluído no total abaixo.`
+        : "Retirada no local sem taxa de entrega. O total abaixo inclui somente os produtos.";
   }
 
   updateChangePreviewV5();
@@ -1083,8 +1162,10 @@ function updatePaymentFieldsV5(){
 }
 function updateChangePreviewV5(){
  if(elements.payment.value!=="Dinheiro")return;
+ const total=calculateCheckoutTotal();
+ if(total === null){elements.changePreview.textContent="Escolha entrega ou retirada para calcular o troco.";elements.changePreview.className="change-preview";return}
  const rawAmount=elements.changeFor.value.replace(",",".");
- const amount=Number(rawAmount),total=calculateCheckoutTotal();
+ const amount=Number(rawAmount);
  if(!rawAmount||!Number.isFinite(amount)||amount<=0){elements.changePreview.textContent="Digite quanto o cliente vai entregar.";elements.changePreview.className="change-preview";return}
  if(amount<total){elements.changePreview.textContent=`Valor insuficiente. Faltam ${formatCurrency(total-amount)}.`;elements.changePreview.className="change-preview invalid";return}
  elements.changePreview.textContent=`Troco: ${formatCurrency(amount-total)}`;elements.changePreview.className="change-preview valid";
